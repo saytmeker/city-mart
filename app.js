@@ -1,9 +1,37 @@
-// Mahsulotlar bazasi
+// Mahsulotlar bazasi (rasm va to'liq ma'lumotlar bilan)
 const products = [
-    { id: 1, name: "Muzlatgich Artel Inverter", category: "Muzlatgichlar", price: 4200000, desc: "No Frost, ikki kamerali, oq rang." },
-    { id: 2, name: "Kir yuvish mashinasi Avalon", category: "Kir yuvish", price: 3500000, desc: "6 kg yuklama, inverter motor." },
-    { id: 3, name: "Televizor Artel 43 LED Smart", category: "Televizorlar", price: 3200000, desc: "Android TV, Full HD, Wi-Fi." },
-    { id: 4, name: "Mikrotolqinli pech Hoffmann", category: "Oshxona texnikasi", price: 1100000, desc: "20 litr sig'im, gril funksiyasi." }
+    { 
+        id: 1, 
+        name: "Muzlatgich Artel Inverter", 
+        category: "Muzlatgichlar", 
+        price: 4200000, 
+        desc: "No Frost, ikki kamerali, oq rang.",
+        image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400" 
+    },
+    { 
+        id: 2, 
+        name: "Kir yuvish mashinasi Avalon", 
+        category: "Kir yuvish", 
+        price: 3500000, 
+        desc: "6 kg yuklama, inverter motor.",
+        image: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400" 
+    },
+    { 
+        id: 3, 
+        name: "Televizor Artel 43 LED Smart", 
+        category: "Televizorlar", 
+        price: 3200000, 
+        desc: "Android TV, Full HD, Wi-Fi.",
+        image: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400" 
+    },
+    { 
+        id: 4, 
+        name: "Mikrotolqinli pech Hoffmann", 
+        category: "Oshxona texnikasi", 
+        price: 1100000, 
+        desc: "20 litr sig'im, gril funksiyasi.",
+        image: "https://images.unsplash.com/photo-1585659722983-3c6c55a22d5c?w=400" 
+    }
 ];
 
 let cart = [];
@@ -29,6 +57,7 @@ function renderProducts(filterText = '', category = 'Barchasi') {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 6px; margin-bottom: 8px;">
             <div>
                 <h4>${product.name}</h4>
                 <p>${product.desc}</p>
@@ -55,7 +84,7 @@ function filterProducts() {
     renderProducts(searchVal, currentCategory);
 }
 
-// Savatga qo'shish
+// Savatga qo'shish (alert chiqmasdan jimgina qo'shiladi)
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     const item = cart.find(i => i.id === productId);
@@ -66,7 +95,6 @@ function addToCart(productId) {
         cart.push({ ...product, quantity: 1 });
     }
     updateCartBar();
-    alert(product.name + " savatga qo'shildi!");
 }
 
 // Savat summasini yangilash
