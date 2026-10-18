@@ -1,53 +1,131 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
+// Mahsulotlar ro'yxati (Kategoriya, narx, xarakteristika va rasmlar bilan)
 const products = [
-    { id: 1, name: "Muzlatgich LG 350L", price: 6500000, img: "https://via.placeholder.com/150?text=Muzlatgich" },
-    { id: 2, name: "Kir yuvish mashinasi Samsung 7kg", price: 4800000, img: "https://via.placeholder.com/150?text=Kir+Yuvish" },
-    { id: 3, name: "Televizor Artel 43 LED", price: 3200000, img: "https://via.placeholder.com/150?text=Televizor" },
-    { id: 4, name: "Mikroto'lqinli pech Hoffmann", price: 1100000, img: "https://via.placeholder.com/150?text=Pech" }
+    {
+        id: 1,
+        title: "Muzlatgich LG 350L",
+        category: "Muzlatgichlar",
+        desc: "NoFrost tizimi, energiya tejamkor A++, sig'imi 350 litr.",
+        price: 6500000,
+        img: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400"
+    },
+    {
+        id: 2,
+        title: "Kir yuvish mashinasi Samsung 7kg",
+        category: "Kir yuvish mashinalari",
+        desc: "Inverter motor, 1400 ayl/min, EcoBubble texnologiyasi.",
+        price: 4800000,
+        img: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400"
+    },
+    {
+        id: 3,
+        title: "Televizor Artel 43 LED Smart",
+        category: "Televizorlar",
+        desc: "Android TV, Full HD, Wi-Fi va Bluetooth mavjud.",
+        price: 3200000,
+        img: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400"
+    },
+    {
+        id: 4,
+        title: "Mikroto'lqinli pech Hoffmann",
+        category: "Oshxona texnikasi",
+        desc: "20 litr sig'im, gril funksiyasi, 800W quvvat.",
+        price: 1100000,
+        img: "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400"
+    },
+    {
+        id: 5,
+        title: "iPhone 13 Pro Max 128GB",
+        category: "Smartfonlar",
+        desc: "Super Retina XDR ekran, ProMotion 120Hz, A15 Bionic chip.",
+        price: 11200000,
+        img: "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=400"
+    }
 ];
 
 let cart = [];
+let currentCategory = 'all';
 
-function renderProducts() {
-    const list = document.getElementById('products-list');
-    list.innerHTML = '';
-    products.forEach(p => {
-        list.innerHTML += `
-            <div class="card">
-                <img src="${p.img}" alt="${p.name}">
-                <h3>${p.name}</h3>
-                <p>${p.price.toLocaleString()} so'm</p>
-                <button class="btn" onclick="addToCart(${p.id})">Savatga qo'shish</button>
-            </div>
+// Mahsulotlarni ekranga chiqarish
+function renderProducts(items) {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '';
+
+    if (items.length === 0) {
+        grid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #888; padding: 20px;">Mahsulot topilmadi</p>';
+        return;
+    }
+
+    items.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <img src="${product.img}" class="product-img" alt="${product.title}">
+            <div class="product-title">${product.title}</div>
+            <div class="product-desc">${product.desc}</div>
+            <div class="product-price">${product.price.toLocaleString()} so'm</div>
+            <button class="add-btn" onclick="addToCart(${product.id})">Savatga qo'shish</button>
         `;
+        grid.appendChild(card);
     });
 }
 
+// Savatga qo'shish
 function addToCart(id) {
     const item = products.find(p => p.id === id);
     cart.push(item);
-    updateTotal();
+    updateCart();
 }
 
-function updateTotal() {
-    let total = cart.reduce((sum, item) => sum + item.price, 0);
-    document.getElementById('total-price').innerText = total.toLocaleString() + " so'm";
+// Savatni yangilash
+function updateCart() {
+    const sum = cart.reduce((total, p) => total + p.price, 0);
+    document.getElementById('cartSum').innerText = sum.toLocaleString();
 }
 
+// Kategoriyani tanlash
+function selectCategory(category, btnElement) {
+    currentCategory = category;
+    
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    filterProducts();
+}
+
+// Qidiruv va kategoriyani birgalikda filtrlash
+function filterProducts() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+
+    const filtered = products.filter(product => {
+        const matchCategory = (currentCategory === 'all' || product.category === currentCategory);
+        const matchSearch = product.title.toLowerCase().includes(searchText) || product.desc.toLowerCase().includes(searchText);
+        return matchCategory && matchSearch;
+    });
+
+    renderProducts(filtered);
+}
+
+// Buyurtma berish (Telegram WebApp orqali botga ma'lumot yuborish)
 function sendOrder() {
     if (cart.length === 0) {
-        alert("Savat bo'sh!");
+        alert("Savat bo'sh! Iltimos, mahsulot tanlang.");
         return;
     }
-    
-    let orderData = {
-        items: cart.map(i => i.name),
-        total: cart.reduce((sum, item) => sum + item.price, 0)
+
+    let orderSummary = cart.map(item => `- ${item.title} (${item.price.toLocaleString()} so'm)`).join('\n');
+    let totalSum = cart.reduce((sum, item) => sum + item.price, 0);
+
+    let data = {
+        items: orderSummary,
+        total: totalSum
     };
 
-    tg.sendData(JSON.stringify(orderData));
+    // Telegram botga buyurtma ma'lumotini yuborish
+    tg.sendData(JSON.stringify(data));
 }
 
-renderProducts();
+// Boshlang'ich yuklash
+renderProducts(products);
