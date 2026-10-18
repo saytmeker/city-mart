@@ -4,231 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>City Mart Do'koni</title>
+    <!-- Telegram Web App skripti -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f4f6f8;
-            color: #333;
-            padding: 12px;
-            padding-bottom: 80px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        header h1 {
-            font-size: 22px;
-            color: #1a1a1a;
-            margin-bottom: 4px;
-        }
-
-        header p {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .search-box {
-            margin-bottom: 12px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 14px;
-            outline: none;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-        }
-
-        .categories {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            scrollbar-width: none;
-        }
-
-        .categories::-webkit-scrollbar {
-            display: none;
-        }
-
-        .cat-btn {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #555;
-        }
-
-        .cat-btn.active {
-            background: #0088cc;
-            color: #fff;
-            border-color: #0088cc;
-            font-weight: bold;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .product-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-
-        .product-img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            background-color: #eee;
-            margin-bottom: 8px;
-        }
-
-        .product-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #222;
-        }
-
-        .product-desc {
-            font-size: 11px;
-            color: #777;
-            margin-bottom: 8px;
-            line-height: 1.3;
-            flex-grow: 1;
-        }
-
-        .product-price {
-            font-size: 13px;
-            font-weight: bold;
-            color: #2e7d32;
-            margin-bottom: 8px;
-        }
-
-        .add-btn {
-            background: #0088cc;
-            color: #fff;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .cart-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            padding: 12px 16px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .cart-total {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .order-btn {
-            background: #4caf50;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        /* Buyurtma modal oynasi */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 350px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .modal-content h3 {
-            margin-bottom: 12px;
-            font-size: 18px;
-            color: #222;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .confirm-btn { background: #4caf50; color: white; }
-        .cancel-btn { background: #e0e0e0; color: #333; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background: #1e293b; color: #fff; padding: 15px; text-align: center; }
+        .search-box { padding: 10px; background: #fff; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .search-box input { width: 90%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
+        .categories { display: flex; overflow-x: auto; padding: 10px; background: #fff; gap: 10px; white-space: nowrap; }
+        .cat-btn { background: #e2e8f0; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+        .cat-btn.active { background: #0284c7; color: #fff; }
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px; padding-bottom: 80px; }
+        .product-card { background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card h4 { margin: 5px 0; font-size: 15px; }
+        .product-card p { font-size: 13px; color: #666; margin: 5px 0; }
+        .product-card button { background: #0284c7; color: #fff; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 15px; box-sizing: border-box; }
+        .order-btn { background: #22c55e; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 15px; }
+        
+        /* Modal oyna */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background: #fff; padding: 20px; border-radius: 10px; width: 85%; max-width: 300px; text-align: center; }
+        .modal-content input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .cancel-btn { background: #cbd5e1; }
+        .confirm-btn { background: #22c55e; color: #fff; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>City Mart Do'koni</h1>
+        <h2>City Mart Do'koni</h2>
         <p>Maishiy texnika va elektronika</p>
     </header>
 
@@ -236,19 +43,18 @@
         <input type="text" id="searchInput" placeholder="Mahsulotlarni qidirish..." oninput="filterProducts()">
     </div>
 
-    <div class="categories">
-        <button class="cat-btn active" onclick="selectCategory('all', this)">Barchasi</button>
+    <div class="categories" id="categoriesContainer">
+        <button class="cat-btn active" onclick="selectCategory('Barchasi', this)">Barchasi</button>
         <button class="cat-btn" onclick="selectCategory('Muzlatgichlar', this)">Muzlatgichlar</button>
-        <button class="cat-btn" onclick="selectCategory('Kir yuvish mashinalari', this)">Kir yuvish</button>
+        <button class="cat-btn" onclick="selectCategory('Kir yuvish', this)">Kir yuvish</button>
         <button class="cat-btn" onclick="selectCategory('Televizorlar', this)">Televizorlar</button>
         <button class="cat-btn" onclick="selectCategory('Oshxona texnikasi', this)">Oshxona</button>
-        <button class="cat-btn" onclick="selectCategory('Smartfonlar', this)">Smartfonlar</button>
     </div>
 
     <div class="products-grid" id="productsGrid"></div>
 
     <div class="cart-bar">
-        <div class="cart-total">Savat: <span id="cartSum">0</span> so'm</div>
+        <div>Savat: <span id="cartSum">0</span> so'm</div>
         <button class="order-btn" onclick="openOrderModal()">Buyurtma berish</button>
     </div>
 
