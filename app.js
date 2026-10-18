@@ -1,7 +1,6 @@
 let tg = window.Telegram.WebApp;
 tg.expand();
 
-// Mahsulotlar ro'yxati (Kategoriya, narx, xarakteristika va rasmlar bilan)
 const products = [
     {
         id: 1,
@@ -48,7 +47,6 @@ const products = [
 let cart = [];
 let currentCategory = 'all';
 
-// Mahsulotlarni ekranga chiqarish
 function renderProducts(items) {
     const grid = document.getElementById('productsGrid');
     grid.innerHTML = '';
@@ -72,60 +70,70 @@ function renderProducts(items) {
     });
 }
 
-// Savatga qo'shish
 function addToCart(id) {
     const item = products.find(p => p.id === id);
     cart.push(item);
     updateCart();
 }
 
-// Savatni yangilash
 function updateCart() {
     const sum = cart.reduce((total, p) => total + p.price, 0);
     document.getElementById('cartSum').innerText = sum.toLocaleString();
 }
 
-// Kategoriyani tanlash
 function selectCategory(category, btnElement) {
     currentCategory = category;
-    
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
-
     filterProducts();
 }
 
-// Qidiruv va kategoriyani birgalikda filtrlash
 function filterProducts() {
     const searchText = document.getElementById('searchInput').value.toLowerCase();
-
     const filtered = products.filter(product => {
         const matchCategory = (currentCategory === 'all' || product.category === currentCategory);
         const matchSearch = product.title.toLowerCase().includes(searchText) || product.desc.toLowerCase().includes(searchText);
         return matchCategory && matchSearch;
     });
-
     renderProducts(filtered);
 }
 
-// Buyurtma berish (Telegram WebApp orqali botga ma'lumot yuborish)
-function sendOrder() {
+// Modal oynani ochish
+function openOrderModal() {
     if (cart.length === 0) {
         alert("Savat bo'sh! Iltimos, mahsulot tanlang.");
         return;
     }
+    document.getElementById('orderModal').style.display = 'flex';
+}
 
-    let orderSummary = cart.map(item => `- ${item.title} (${item.price.toLocaleString()} so'm)`).join('\n');
+// Modal oynani yopish
+function closeOrderModal() {
+    document.getElementById('orderModal').style.display = 'none';
+}
+
+// Buyurtmani botga yuborish
+function submitOrder() {
+    const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+
+    if (!name || !phone) {
+        alert("Iltimos, ismingiz va telefon raqamingizni kiriting!");
+        return;
+    }
+
+    let orderItems = cart.map((item, index) => `${index + 1}. ${item.title} - ${item.price.toLocaleString()} so'm`).join('\n');
     let totalSum = cart.reduce((sum, item) => sum + item.price, 0);
 
     let data = {
-        items: orderSummary,
+        name: name,
+        phone: phone,
+        items: orderItems,
         total: totalSum
     };
 
-    // Telegram botga buyurtma ma'lumotini yuborish
+    // Telegram Bot WebApp orqali ma'lumotlarni yuborish
     tg.sendData(JSON.stringify(data));
 }
 
-// Boshlang'ich yuklash
 renderProducts(products);

@@ -36,7 +36,6 @@
             color: #666;
         }
 
-        /* Qidiruv bo'limi */
         .search-box {
             margin-bottom: 12px;
         }
@@ -52,7 +51,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
-        /* Kategoriyalar */
         .categories {
             display: flex;
             gap: 8px;
@@ -85,7 +83,6 @@
             font-weight: bold;
         }
 
-        /* Mahsulotlar to'ri */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -144,11 +141,6 @@
             width: 100%;
         }
 
-        .add-btn:active {
-            opacity: 0.8;
-        }
-
-        /* Pastki savat paneli */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -177,6 +169,60 @@
             font-size: 14px;
             cursor: pointer;
         }
+
+        /* Buyurtma modal oynasi */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #222;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .confirm-btn { background: #4caf50; color: white; }
+        .cancel-btn { background: #e0e0e0; color: #333; }
     </style>
 </head>
 <body>
@@ -186,12 +232,10 @@
         <p>Maishiy texnika va elektronika</p>
     </header>
 
-    <!-- Qidiruv -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Mahsulotlarni qidirish..." oninput="filterProducts()">
     </div>
 
-    <!-- Kategoriyalar -->
     <div class="categories">
         <button class="cat-btn active" onclick="selectCategory('all', this)">Barchasi</button>
         <button class="cat-btn" onclick="selectCategory('Muzlatgichlar', this)">Muzlatgichlar</button>
@@ -201,13 +245,24 @@
         <button class="cat-btn" onclick="selectCategory('Smartfonlar', this)">Smartfonlar</button>
     </div>
 
-    <!-- Mahsulotlar -->
     <div class="products-grid" id="productsGrid"></div>
 
-    <!-- Savat paneli -->
     <div class="cart-bar">
         <div class="cart-total">Savat: <span id="cartSum">0</span> so'm</div>
-        <button class="order-btn" onclick="sendOrder()">Buyurtma berish</button>
+        <button class="order-btn" onclick="openOrderModal()">Buyurtma berish</button>
+    </div>
+
+    <!-- Buyurtma berish oynasi -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <h3>Buyurtmani rasmiylashtirish</h3>
+            <input type="text" id="userName" placeholder="Ismingizni kiriting">
+            <input type="tel" id="userPhone" placeholder="Telefon raqamingiz (+998...)">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" onclick="closeOrderModal()">Yopish</button>
+                <button class="modal-btn confirm-btn" onclick="submitOrder()">Tasdiqlash</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
